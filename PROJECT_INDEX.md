@@ -1,6 +1,6 @@
 # TV FaceBrasil v4 - Project Index
 
-Last verified: 2026-06-04 17:20 UTC
+Last verified: 2026-06-04 17:32 UTC
 Source of truth repo: `sergiomvj/tvfacebrasilv4`
 Legacy repo: `sergiomvj/tvfacebrasil` (do not use for v4 execution)
 
@@ -8,11 +8,15 @@ Legacy repo: `sergiomvj/tvfacebrasil` (do not use for v4 execution)
 
 - Repo: https://github.com/sergiomvj/tvfacebrasilv4
 - Main branch: `main`
-- Latest verified local commit before this index: `c29585c Publish TV FaceBrasil v4 PRD`
+- Latest verified remote commit: `623d454 Add project source-of-truth index`
+- Operational reset issue: https://github.com/sergiomvj/tvfacebrasilv4/issues/22
 - Local mock E2E: passing
 - Persona smoke test: passing
 - Provider catalog smoke test: passing
 - Daily mode: fixed so `npm run daily` keeps the cron process alive
+- Current local mock daily process: running via `node src/index.js --daily`
+- Current local mock daily PID file: `logs/tvfacebrasilv4-daily-mock.pid`
+- Current local mock daily log: `logs/tvfacebrasilv4-daily-mock.log`
 - Production API consumption: not approved in this index; use mock/offline until PO/Sergio approval
 
 ## Core Documents
