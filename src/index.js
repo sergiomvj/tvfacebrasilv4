@@ -155,6 +155,5 @@ if (isDaily) {
   // Executa uma vez
   await runProductionCycle();
   console.log('\n[TV FaceBrasil] Use --daily para manter execução contínua.');
+  process.exit(0);
 }
-
-process.exit(0);
