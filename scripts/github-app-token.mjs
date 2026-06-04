@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const crypto = require('crypto');
+import crypto from 'node:crypto';
+import fs from 'node:fs';
 
 const appId = process.env.GITHUB_APP_ID || readTrim('/home/sergio/.openclaw/secrets/github-app-id.txt');
 const installationId = process.env.GITHUB_APP_INSTALLATION_ID || readTrim('/home/sergio/.openclaw/secrets/github-installation-id.txt');
