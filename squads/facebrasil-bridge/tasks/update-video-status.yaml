@@ -1,0 +1,9 @@
+# update-video-status - Task
+name: update-video-status
+squad: facebrasil-bridge
+description: Salva metadados do vídeo no Supabase
+
+inputs:
+  - name: videos
+    type: array
+    description: Lista de vídeos concluídos

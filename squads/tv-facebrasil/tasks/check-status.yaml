@@ -1,0 +1,20 @@
+# check-status - Task
+name: check-status
+squad: tv-facebrasil
+description: Verifica status de conclusão de vídeos HeyGen
+
+inputs:
+  - name: jobs
+    type: array
+    description: Lista de jobs de vídeo
+  - name: pollInterval
+    type: number
+    default: 30
+  - name: maxWait
+    type: number
+    default: 300
+
+outputs:
+  - name: completed
+    type: array
+    description: Vídeos concluídos

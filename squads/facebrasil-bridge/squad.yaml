@@ -1,0 +1,18 @@
+# squads/facebrasil-bridge/squad.yaml
+name: facebrasil-bridge
+description: Squad de integração com o ecossistema FaceBrasil (Supabase)
+version: 1.0.0
+
+agents:
+  - @article-fetcher
+
+tasks:
+  - fetch-top-articles
+  - update-video-status
+
+config:
+  supabase:
+    table: articles
+    statusFilter: PUBLISHED
+    defaultLimit: 5
+    defaultDaysBack: 7

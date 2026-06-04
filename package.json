@@ -1,0 +1,21 @@
+{
+  "name": "tv-facebrasil-v4",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TV FaceBrasil v4 - HeyGen Shorts generator",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "TVFACEBRASIL_HEYGEN_MOCK=true TVFACEBRASIL_LLM_MOCK=true node src/index.js",
+    "smoke:persona": "node scripts/smoke-persona-prompt.mjs",
+    "smoke:providers": "node scripts/smoke-video-providers.mjs",
+    "daily": "node src/index.js --daily",
+    "once": "node src/index.js --once"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "openai": "^4.70.0",
+    "node-cron": "^3.0.3"
+  }
+}

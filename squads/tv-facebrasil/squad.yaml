@@ -1,0 +1,33 @@
+# squads/tv-facebrasil/squad.yaml
+name: tv-facebrasil
+description: Squad de geração de vídeos HeyGen para o TV FaceBrasil
+version: 1.0.0
+
+agents:
+  - @scriptwriter
+  - @video-producer
+
+tasks:
+  - generate-short
+  - check-status
+
+workflows:
+  - daily-production
+
+config:
+  heygen:
+    accounts: 2
+    maxSimultaneous: 3
+    maxDuration: 60
+    aspectRatio: "9:16"
+  avatars:
+    - id: avatar-1
+      name: "Apresentador Principal"
+      voice: "voz-masc-ptbr"
+      tone: "jornalistico"
+      account: "Conta-A"
+    - id: avatar-2
+      name: "Apresentador Alternativo"
+      voice: "voz-fem-ptbr"
+      tone: "leve"
+      account: "Conta-B"

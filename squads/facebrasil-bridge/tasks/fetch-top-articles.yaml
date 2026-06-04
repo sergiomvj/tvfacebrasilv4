@@ -1,0 +1,20 @@
+# fetch-top-articles - Task
+name: fetch-top-articles
+squad: facebrasil-bridge
+description: Busca top artigos do Supabase
+
+inputs:
+  - name: limit
+    type: number
+    default: 5
+  - name: minViews
+    type: number
+    default: 100
+  - name: daysBack
+    type: number
+    default: 7
+
+outputs:
+  - name: articles
+    type: array
+    description: Lista de artigos

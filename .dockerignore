@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.template
+node_modules
+npm-debug.log
+coverage
+.git
+.DS_Store
+logs
+*.pem
+*.key
+*.token
