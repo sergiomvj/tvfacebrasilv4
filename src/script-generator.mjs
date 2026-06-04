@@ -6,6 +6,7 @@
 
 import { createChatCompletion, getTextProviders, hasUsableTextProvider } from './llm-provider.mjs';
 import { envBool } from './env.mjs';
+import { prepareEditorialPayload } from './editorial-payload.mjs';
 
 const MOCK_TEMPLATE = [
   '[HOOK — 5s]',
@@ -33,12 +34,13 @@ const MOCK_TEMPLATE = [
  * @returns {Promise<string>} Roteiro formatado
  */
 export async function generateScript(article) {
+  const payload = prepareEditorialPayload(article);
   const forceMock = envBool(false, 'TVFACEBRASIL_LLM_MOCK', 'LLM_MOCK');
   const isMock = forceMock || !hasUsableTextProvider();
 
   if (isMock) {
-    console.log('[Script Mock] Artigo:', article.title);
-    return buildMockScript(article);
+    console.log('[Script Mock] Artigo:', payload.title);
+    return buildMockScript(payload);
   }
 
   const prompt = `Você é roteirista de Shorts de notícias para YouTube.
@@ -54,8 +56,13 @@ REGRAS:
 6. Marca no final: "FaceBrasil — Sua comunidade brasileira nos Estados Unidos"
 
 ARTIGO:
-${article.title}
-${(article.content || '').substring(0, 2000)}
+Titulo: ${payload.title}
+Resumo: ${payload.summary}
+Categoria: ${payload.category}
+URL: ${payload.url}
+Metrica: ${payload.tracking.metric.name}=${payload.tracking.metric.value}
+
+${payload.content}
 
 Produza APENAS o script. Sem explicações.`;
 
@@ -69,7 +76,7 @@ Produza APENAS o script. Sem explicações.`;
         console.log('[Script] Roteiro gerado com LLM:', {
           provider: provider.name,
           model: provider.model,
-          article: article.title
+          article: payload.title
         });
         return script;
       }
@@ -86,7 +93,7 @@ Produza APENAS o script. Sem explicações.`;
   }
 
   console.error('[Script] Todos os provedores LLM falharam. Usando mock:', lastError?.message);
-  return buildMockScript(article);
+  return buildMockScript(payload);
 }
 
 function buildMockScript(article) {

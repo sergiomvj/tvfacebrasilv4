@@ -28,6 +28,7 @@ TVFACEBRASIL_LLM_MOCK=true
 npm test                 # ciclo E2E mock/offline
 npm run smoke:aiox       # valida squads/tasks/workflow declarativo em dry-run mock
 npm run smoke:articles   # valida busca de artigos candidatos em mock/offline
+npm run smoke:editorial  # valida limpeza e payload editorial para roteiro
 npm run smoke:persona    # valida Persona Bible + Prompt Composer
 npm run smoke:providers  # valida catálogo de modelos OpenRouter Video
 npm run once             # roda um ciclo usando as variáveis do .env
