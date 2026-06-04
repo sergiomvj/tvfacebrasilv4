@@ -8,6 +8,7 @@
     "start": "node src/index.js",
     "test": "TVFACEBRASIL_HEYGEN_MOCK=true TVFACEBRASIL_LLM_MOCK=true node src/index.js",
     "smoke:aiox": "node scripts/smoke-aiox-workflow.mjs",
+    "smoke:articles": "node scripts/smoke-article-fetch.mjs",
     "smoke:persona": "node scripts/smoke-persona-prompt.mjs",
     "smoke:providers": "node scripts/smoke-video-providers.mjs",
     "daily": "node src/index.js --daily",

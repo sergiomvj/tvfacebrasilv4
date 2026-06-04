@@ -17,4 +17,4 @@ inputs:
 outputs:
   - name: articles
     type: array
-    description: Lista de artigos
+    description: Lista de artigos com title, content, category, url, publishedAt e metric
