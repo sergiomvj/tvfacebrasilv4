@@ -1,30 +1,45 @@
 # daily-production - Workflow
 name: daily-production
-squad: tv-facebrasil
+squad: tv-facebrasil-squad
 description: Produção diária de Shorts FaceBrasil
+mode: mock-safe
 
 schedule:
   interval: "*/30 * * * *"
 
 steps:
-  - task: fetch-top-articles
+  - id: fetch
+    task: fetch-top-articles
+    squad: facebrasil-bridge-squad
     params:
       limit: 5
       minViews: 50
       daysBack: 7
     output: articles
 
-  - task: generate-short
+  - id: script
+    task: generate-script
+    squad: tv-facebrasil-squad
     forEach: articles
+    output: scripts
+
+  - id: video
+    task: produce-video
+    squad: tv-facebrasil-squad
+    forEach: scripts
     output: videos
 
-  - task: check-status
+  - id: status
+    task: check-status
+    squad: tv-facebrasil-squad
     params:
       jobs: videos
       pollInterval: 30
       maxWait: 300
     output: completed
 
-  - task: update-video-status
+  - id: persist-status
+    task: update-video-status
+    squad: facebrasil-bridge-squad
     params:
       videos: completed

@@ -1,6 +1,6 @@
 # fetch-top-articles - Task
 name: fetch-top-articles
-squad: facebrasil-bridge
+squad: facebrasil-bridge-squad
 description: Busca top artigos do Supabase
 
 inputs:

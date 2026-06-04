@@ -1,6 +1,6 @@
 # check-status - Task
 name: check-status
-squad: tv-facebrasil
+squad: tv-facebrasil-squad
 description: Verifica status de conclusão de vídeos HeyGen
 
 inputs:

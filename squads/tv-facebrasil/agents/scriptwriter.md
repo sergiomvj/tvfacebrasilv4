@@ -1,6 +1,6 @@
 # @scriptwriter - TV FaceBrasil
 name: scriptwriter
-squad: tv-facebrasil
+squad: tv-facebrasil-squad
 description: Gera roteiros otimizados para Shorts 9:16 a partir de artigos
 
 capabilities:

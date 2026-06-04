@@ -1,6 +1,6 @@
 # @video-producer - TV FaceBrasil
 name: video-producer
-squad: tv-facebrasil
+squad: tv-facebrasil-squad
 description: Produz vídeos Shorts via HeyGen API com round-robin entre contas
 
 capabilities:

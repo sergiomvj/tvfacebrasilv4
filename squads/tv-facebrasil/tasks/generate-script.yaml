@@ -1,0 +1,20 @@
+# generate-script - Task
+name: generate-script
+squad: tv-facebrasil-squad
+description: Transforma artigo FaceBrasil em roteiro curto para avatar
+
+inputs:
+  - name: article
+    type: object
+    description: Artigo com title, content, category
+
+outputs:
+  - name: script
+    type: object
+    description: Roteiro validavel para Short 9:16
+
+steps:
+  - agent: @scriptwriter
+    task: generate_script
+    input: article
+    output: script

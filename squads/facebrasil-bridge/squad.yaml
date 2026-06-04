@@ -1,5 +1,6 @@
 # squads/facebrasil-bridge/squad.yaml
-name: facebrasil-bridge
+name: facebrasil-bridge-squad
+slug: facebrasil-bridge
 description: Squad de integração com o ecossistema FaceBrasil (Supabase)
 version: 1.0.0
 
@@ -11,6 +12,7 @@ tasks:
   - update-video-status
 
 config:
+  mode: mock-safe
   supabase:
     table: articles
     statusFilter: PUBLISHED

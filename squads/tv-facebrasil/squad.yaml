@@ -1,5 +1,6 @@
 # squads/tv-facebrasil/squad.yaml
-name: tv-facebrasil
+name: tv-facebrasil-squad
+slug: tv-facebrasil
 description: Squad de geração de vídeos HeyGen para o TV FaceBrasil
 version: 1.0.0
 
@@ -8,6 +9,8 @@ agents:
   - @video-producer
 
 tasks:
+  - generate-script
+  - produce-video
   - generate-short
   - check-status
 
@@ -15,6 +18,7 @@ workflows:
   - daily-production
 
 config:
+  mode: mock-safe
   heygen:
     accounts: 2
     maxSimultaneous: 3

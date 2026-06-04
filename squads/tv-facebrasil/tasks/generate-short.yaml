@@ -1,6 +1,6 @@
 # generate-short - Task
 name: generate-short
-squad: tv-facebrasil
+squad: tv-facebrasil-squad
 description: Transforma um artigo em Short 9:16 via HeyGen
 
 inputs:

@@ -1,0 +1,32 @@
+# produce-video - Task
+name: produce-video
+squad: tv-facebrasil-squad
+description: Produz Short 9:16 a partir de roteiro aprovado
+
+inputs:
+  - name: article
+    type: object
+    description: Artigo de origem para titulo e metadados
+  - name: script
+    type: object
+    description: Roteiro aprovado para locucao
+  - name: avatar
+    type: string
+    description: ID do avatar
+  - name: account
+    type: string
+    description: Conta HeyGen
+  - name: maxDuration
+    type: number
+    default: 60
+
+outputs:
+  - name: video
+    type: object
+    description: Job ou resultado da geracao de video
+
+steps:
+  - agent: @video-producer
+    task: call_heygen_api
+    input: { article, script, avatar, account, maxDuration }
+    output: video

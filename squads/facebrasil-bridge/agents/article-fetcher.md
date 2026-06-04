@@ -1,6 +1,6 @@
 # @article-fetcher - FaceBrasil Bridge
 name: article-fetcher
-squad: facebrasil-bridge
+squad: facebrasil-bridge-squad
 description: Busca artigos do Supabase FaceBrasil para processamento
 
 capabilities:
