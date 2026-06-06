@@ -220,15 +220,23 @@ export async function generateShort({ title, script, account, avatarId, voiceId 
 }
 
 /**
- * Verifica o status de um vídeo em andamento.
+ * Polling de status do vídeo com backoff exponencial.
  * @param {string} videoId
+ * @param {{ maxPollTime?: number, interval?: number }} [options]
  * @returns {Promise<{ status: string, videoId: string, url?: string }>}
  */
-export async function checkVideoStatus(videoId) {
+export async function checkVideoStatus(videoId, options = {}) {
+  const maxPollTime = options.maxPollTime || 120_000;
+  const baseInterval = options.interval || 5_000;
+
   if (envBool(false, 'TVFACEBRASIL_HEYGEN_MOCK', 'HEYGEN_MOCK')) {
-    return { status: 'completed', videoId, url: `https://cdn.heygen.com/mock/${videoId}.mp4` };
+    return mockPolling(videoId, maxPollTime, baseInterval);
   }
 
+  const startTime = Date.now();
+  let attempt = 0;
+
+  // Busca conta primária para consulta
   const account = buildAccountPool()[0];
   const apiKey = account ? account.apiKey : null;
 
@@ -236,21 +244,93 @@ export async function checkVideoStatus(videoId) {
     return { status: 'error', videoId };
   }
 
-  // Usa a primeira conta configurada para polling.
-  const response = await fetch(`https://api.heygen.com/v3/video/status?video_id=${videoId}`, {
-    headers: { 'X-Api-Key': apiKey }
-  });
+  while (Date.now() - startTime < maxPollTime) {
+    attempt++;
 
-  if (!response.ok) {
-    return { status: 'error', videoId };
+    try {
+      const response = await fetch(`https://api.heygen.com/v3/video/status?video_id=${videoId}`, {
+        headers: { 'X-Api-Key': apiKey }
+      });
+
+      if (!response.ok) {
+        const elapsed = Date.now() - startTime;
+        const waitMs = Math.min(baseInterval * Math.pow(1.5, attempt - 1), 30_000);
+        console.log('[HeyGen] Polling: erro HTTP', response.status, `- tentativa ${attempt}, aguardando ${waitMs}ms`);
+        await new Promise(r => setTimeout(r, waitMs));
+        continue;
+      }
+
+      const data = await response.json();
+
+      if (data.status === 'completed' || data.status === 'failed' || data.status === 'error') {
+        console.log('[HeyGen] Polling concluído:', {
+          status: data.status,
+          videoId,
+          elapsed: `${((Date.now() - startTime) / 1000).toFixed(1)}s`,
+          attempts: attempt
+        });
+        return {
+          status: data.status,
+          videoId,
+          url: data.video_url
+        };
+      }
+
+      // Ainda em processing/pending — espera com backoff
+      const waitMs = Math.min(baseInterval * Math.pow(1.5, attempt - 1), 30_000);
+      console.log('[HeyGen] Polling:', { status: data.status, videoId, attempt, waitMs: `${(waitMs / 1000).toFixed(1)}s` });
+      await new Promise(r => setTimeout(r, waitMs));
+
+    } catch (err) {
+      const elapsed = Date.now() - startTime;
+      const waitMs = Math.min(baseInterval * Math.pow(1.5, attempt - 1), 30_000);
+      console.warn('[HeyGen] Polling: erro', err.message, `- tentativa ${attempt}, aguardando ${waitMs}ms`);
+      await new Promise(r => setTimeout(r, waitMs));
+    }
   }
 
-  const data = await response.json();
-  return {
-    status: data.status,
-    videoId,
-    url: data.video_url
-  };
+  // Timeout excedido
+  console.log('[HeyGen] Polling: timeout após', `${((Date.now() - startTime) / 1000).toFixed(1)}s`, '- videoId:', videoId);
+  return { status: 'timeout', videoId };
+}
+
+/**
+ * Simula polling em modo mock — pending (2x), depois completed ou failed.
+ */
+async function mockPolling(videoId, maxPollTime, baseInterval) {
+  const startTime = Date.now();
+  let attempt = 0;
+
+  while (Date.now() - startTime < maxPollTime) {
+    attempt++;
+
+    // Simula: 2 primeiras tentativas = pending
+    if (attempt <= 2) {
+      const waitMs = baseInterval;
+      console.log('[HeyGen Mock] Polling:', { status: 'pending', videoId, attempt, waitMs: `${(waitMs / 1000).toFixed(1)}s` });
+      await new Promise(r => setTimeout(r, waitMs));
+      continue;
+    }
+
+    // 3ª tentativa: completed (90%) ou failed (10%)
+    const isFailed = Math.random() < 0.1;
+    const status = isFailed ? 'failed' : 'completed';
+
+    console.log('[HeyGen Mock] Polling concluído:', {
+      status,
+      videoId,
+      elapsed: `${((Date.now() - startTime) / 1000).toFixed(1)}s`,
+      attempts: attempt
+    });
+
+    return {
+      status,
+      videoId,
+      url: isFailed ? undefined : `https://cdn.heygen.com/mock/${videoId}.mp4`
+    };
+  }
+
+  return { status: 'timeout', videoId };
 }
 
 /** Reseta o round-robin para o início. */

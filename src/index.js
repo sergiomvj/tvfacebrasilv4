@@ -102,16 +102,20 @@ async function runProductionCycle() {
     const batchResults = await runWithConcurrency(batchTasks, concurrency);
     results.push(...batchResults);
 
-    // Passo 3: Verificar status (apenas para vídeos pendentes)
-    console.log('\n[3/4] Verificando status dos vídeos...');
+    // Passo 3: Verificar status em paralelo (apenas para videos pendentes)
+    console.log('\n[3/4] Verificando status dos videos...');
     const completedVideos = [];
-    for (const r of results) {
-      if (r.video.success) {
-        const checkResult = await checkVideoStatus(r.video.videoId);
-        console.log(`[3/4] ${r.article.title}: ${checkResult.status}`);
-        completedVideos.push({ ...r, status: checkResult });
-      }
-    }
+    const checkTasks = results
+      .filter(r => r.video.success)
+      .map(r => () => checkVideoStatus(r.video.videoId, {
+        maxPollTime: 30_000,
+        interval: 1_000
+      }).then(status => {
+        console.log(`[3/4] ${r.article.title}: ${status.status}`);
+        completedVideos.push({ ...r, status });
+      }));
+
+    await runWithConcurrency(checkTasks, concurrency);
 
     // Passo 4: Salvar metadados
     console.log('\n[4/4] Salvando metadados no banco...');
@@ -125,6 +129,8 @@ async function runProductionCycle() {
           avatarId: cv.video.avatarId
         });
         console.log(`[4/4] Artigo ${cv.article.id}: ${saveResult.success ? '✅' : '❌'}`);
+      } else {
+        console.log(`[3/4] ${cv.article.title}: ${cv.status.status === 'timeout' ? '⏰ timeout' : '❌ ' + cv.status.status} — ignorado`);
       }
     }
 
