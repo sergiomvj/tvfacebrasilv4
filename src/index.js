@@ -19,6 +19,7 @@ import { generateScript } from './script-generator.mjs';
 import { validateScript } from './script-validator.mjs';
 import { fetchTopArticles, saveVideoMetadata } from './facebrasil-bridge.mjs';
 import { envBool } from './env.mjs';
+import { recordProduction, wasProcessedThisCycle, getTotalProcessed, resetCycle as resetState } from './state-tracker.mjs';
 import cron from 'node-cron';
 
 const args = process.argv.slice(2);
@@ -67,7 +68,16 @@ async function runProductionCycle() {
     // Passo 1: Buscar artigos
     console.log('\n[1/4] Buscando artigos...');
     const articles = await fetchTopArticles({ limit: cliLimit, daysBack: cliDaysBack, minViews: 50 });
-    console.log(`[1/4] ${articles.length} artigos encontrados`);
+    const newArticles = articles.filter(a => !wasProcessedThisCycle(a.id));
+    if (newArticles.length < articles.length) {
+      console.log(`[1/4] ${articles.length} encontrados, ${newArticles.length} novos (${articles.length - newArticles.length} ja processados neste ciclo)`);
+    } else {
+      console.log(`[1/4] ${articles.length} artigos encontrados`);
+    }
+
+    // Substitui pelo array filtrado
+    articles.length = 0;
+    articles.push(...newArticles);
 
     if (articles.length === 0) {
       console.log('[TV FaceBrasil] Nenhum artigo para processar. \u23ED\ufe0f');
@@ -81,6 +91,9 @@ async function runProductionCycle() {
     }
 
     resetRoundRobin();
+    resetState();
+    const totalProcessed = getTotalProcessed();
+    console.log('[StateTracker] Registros historicos:', totalProcessed);
     const results = [];
 
     // Passo 2: Gerar scripts + vídeos com concorrência controlada
@@ -160,6 +173,19 @@ async function runProductionCycle() {
           account: cv.video.account,
           avatarId: cv.video.avatarId
         });
+        if (saveResult.success) {
+          recordProduction({
+            articleId: cv.article.id,
+            title: cv.article.title,
+            url: cv.status.url || cv.video.url,
+            script: cv.script?.scriptText || null,
+            jobId: cv.video.videoId,
+            videoId: cv.video.videoId,
+            status: cv.status.status,
+            account: cv.video.account,
+            avatarId: cv.video.avatarId
+          });
+        }
         console.log(`[4/4] Artigo ${cv.article.id}: ${saveResult.success ? '✅' : '❌'}`);
       } else {
         console.log(`[3/4] ${cv.article.title}: ${cv.status.status === 'timeout' ? '⏰ timeout' : '❌ ' + cv.status.status} — ignorado`);
