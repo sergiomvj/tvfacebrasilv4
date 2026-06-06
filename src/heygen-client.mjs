@@ -6,8 +6,64 @@
  */
 
 import { envBool, envValue, hasUsableValue } from './env.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const STATE_FILE = path.resolve(process.cwd(), '.aiox/roundrobin-state.json');
 
 let roundRobinIndex = 0;
+
+/** Retorna o limite de concorrência configurado */
+export function getConcurrencyLimit() {
+  return Math.max(1, parseInt(envValue('TVFACEBRASIL_HEYGEN_CONCURRENCY') || '2', 10));
+}
+
+/** Executa um lote de funções assíncronas com limite de concorrência */
+export async function runWithConcurrency(tasks, concurrency = 2) {
+  const results = [];
+  const executing = new Set();
+
+  for (const [index, task] of tasks.entries()) {
+    const promise = Promise.resolve().then(() => task()).then(result => {
+      results[index] = result;
+    });
+    executing.add(promise);
+
+    if (executing.size >= concurrency) {
+      await Promise.race(executing);
+      executing.delete([...executing][0]);
+    }
+  }
+
+  await Promise.allSettled(executing);
+  return results;
+}
+
+/** Carrega estado persistido do round-robin */
+function loadState() {
+  try {
+    if (fs.existsSync(STATE_FILE)) {
+      const data = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+      roundRobinIndex = data.index || 0;
+      console.log('[HeyGen] Estado round-robin carregado:', { index: roundRobinIndex });
+    }
+  } catch (err) {
+    console.warn('[HeyGen] Não foi possível carregar estado round-robin:', err.message);
+  }
+}
+
+/** Persiste estado do round-robin */
+function saveState() {
+  try {
+    const dir = path.dirname(STATE_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(STATE_FILE, JSON.stringify({ index: roundRobinIndex }, null, 2));
+  } catch (err) {
+    console.warn('[HeyGen] Não foi possível salvar estado round-robin:', err.message);
+  }
+}
+
+loadState();
 
 function buildAccountPool() {
   const isMock = envBool(false, 'TVFACEBRASIL_HEYGEN_MOCK', 'HEYGEN_MOCK');
@@ -78,6 +134,8 @@ export function getNextAccount(category = null) {
     category,
     mode: accounts.length === 1 ? 'single-account' : 'multi-account'
   });
+
+  saveState();
 
   return { account: selected.name, ...selected };
 }
@@ -194,4 +252,5 @@ export async function checkVideoStatus(videoId) {
 /** Reseta o round-robin para o início. */
 export function resetRoundRobin() {
   roundRobinIndex = 0;
+  saveState();
 }

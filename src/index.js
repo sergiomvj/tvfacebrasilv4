@@ -11,7 +11,7 @@
  */
 
 import 'dotenv/config';
-import { getNextAccount, generateShort, checkVideoStatus, resetRoundRobin } from './heygen-client.mjs';
+import { getNextAccount, generateShort, checkVideoStatus, resetRoundRobin, getConcurrencyLimit, runWithConcurrency } from './heygen-client.mjs';
 import { generateScript } from './script-generator.mjs';
 import { validateScript } from './script-validator.mjs';
 import { fetchTopArticles, saveVideoMetadata } from './facebrasil-bridge.mjs';
@@ -51,10 +51,12 @@ async function runProductionCycle() {
     resetRoundRobin();
     const results = [];
 
-    // Passo 2: Gerar scripts + vídeos
+    // Passo 2: Gerar scripts + vídeos com concorrência controlada
     console.log('\n[2/4] Gerando roteiros e vídeos...');
-    for (let i = 0; i < articles.length; i++) {
-      const article = articles[i];
+    const concurrency = getConcurrencyLimit();
+    console.log(`[2/4] Concorrência máxima: ${concurrency}`);
+
+    const batchTasks = articles.map((article, i) => async () => {
       console.log(`\n--- Artigo ${i + 1}/${articles.length}: ${article.title} ---`);
 
       try {
@@ -65,8 +67,7 @@ async function runProductionCycle() {
 
         if (!validation.approved) {
           console.error('[2/4] Roteiro reprovado:', validation.reasons);
-          results.push({ article, script, validation, video: { success: false, error: validation.reasons.join('; ') } });
-          continue;
+          return { article, script, validation, video: { success: false, error: validation.reasons.join('; ') } };
         }
 
         // Seleciona conta/avatar (round-robin com preferência de categoria)
@@ -88,15 +89,18 @@ async function runProductionCycle() {
           mock: videoResult.mock
         });
 
-        results.push({ article, script, validation, video: videoResult });
+        return { article, script, validation, video: videoResult };
       } catch (error) {
         console.error('[2/4] Falha no artigo. Continuando batch:', {
           article: article.title,
           error: error.message
         });
-        results.push({ article, video: { success: false, error: error.message } });
+        return { article, video: { success: false, error: error.message } };
       }
-    }
+    });
+
+    const batchResults = await runWithConcurrency(batchTasks, concurrency);
+    results.push(...batchResults);
 
     // Passo 3: Verificar status (apenas para vídeos pendentes)
     console.log('\n[3/4] Verificando status dos vídeos...');
