@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-06-06T20:49:36.841Z",
+  "mock": true,
+  "tests": [
+    {
+      "title": "Novas regras de imigração",
+      "heygen": {
+        "provider": "heygen",
+        "status": "completed",
+        "videoId": "mock-1780778976844",
+        "url": "https://cdn.heygen.com/mock/mock-1780778976844.mp4",
+        "success": true
+      },
+      "openrouter": {
+        "provider": "openrouter",
+        "model": "unknown",
+        "status": "error",
+        "videoId": null,
+        "url": null,
+        "success": false,
+        "duration": 0,
+        "error": "OpenRouter API key não configurada"
+      }
+    },
+    {
+      "title": "Custo de vida nos EUA",
+      "heygen": {
+        "provider": "heygen",
+        "status": "completed",
+        "videoId": "mock-1780778978850",
+        "url": "https://cdn.heygen.com/mock/mock-1780778978850.mp4",
+        "success": true
+      },
+      "openrouter": {
+        "provider": "openrouter",
+        "model": "unknown",
+        "status": "error",
+        "videoId": null,
+        "url": null,
+        "success": false,
+        "duration": 0,
+        "error": "OpenRouter API key não configurada"
+      }
+    }
+  ]
+}
