@@ -67,32 +67,36 @@ loadState();
 
 function buildAccountPool() {
   const isMock = envBool(false, 'TVFACEBRASIL_HEYGEN_MOCK', 'HEYGEN_MOCK');
-  const accountDefs = [
-    {
+
+  // Constrói contas dinamicamente baseado nas env vars disponíveis
+  const accounts = [];
+
+  // Conta-A é sempre default
+  const keyA = envValue('TVFACEBRASIL_HEYGEN_A_API_KEY', 'HEYGEN_A_API_KEY');
+  if (hasUsableValue(keyA) || isMock) {
+    accounts.push({
       name: 'Conta-A',
-      apiKey: envValue('TVFACEBRASIL_HEYGEN_A_API_KEY', 'HEYGEN_A_API_KEY'),
+      apiKey: keyA,
       avatarId: envValue('TVFACEBRASIL_HEYGEN_A_AVATAR_ID', 'HEYGEN_A_AVATAR_ID') || 'avatar-1',
       voiceId: envValue('TVFACEBRASIL_HEYGEN_A_VOICE_ID', 'HEYGEN_A_VOICE_ID') || 'voz-masc-ptbr'
-    },
-    {
+    });
+  }
+
+  // Conta-B só entra se tiver API key
+  const keyB = envValue('TVFACEBRASIL_HEYGEN_B_API_KEY', 'HEYGEN_B_API_KEY');
+  if (hasUsableValue(keyB)) {
+    accounts.push({
       name: 'Conta-B',
-      apiKey: envValue('TVFACEBRASIL_HEYGEN_B_API_KEY', 'HEYGEN_B_API_KEY'),
+      apiKey: keyB,
       avatarId: envValue('TVFACEBRASIL_HEYGEN_B_AVATAR_ID', 'HEYGEN_B_AVATAR_ID') || 'avatar-2',
       voiceId: envValue('TVFACEBRASIL_HEYGEN_B_VOICE_ID', 'HEYGEN_B_VOICE_ID') || 'voz-fem-ptbr'
-    }
-  ];
-
-  const configured = accountDefs.filter(account => hasUsableValue(account.apiKey));
-
-  if (configured.length > 0) {
-    return configured;
+    });
   }
 
-  if (isMock) {
-    return [accountDefs[0]];
-  }
+  const mode = accounts.length > 1 ? 'multi-account' : 'single-account';
+  console.log('[HeyGen] Pool de contas:', { count: accounts.length, mode });
 
-  return [];
+  return accounts;
 }
 
 export function getHeyGenAccounts() {
