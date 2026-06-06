@@ -5,9 +5,12 @@
  * Workflow: fetch articles → generate scripts → produce shorts → update DB
  *
  * Uso:
- *   node src/index.js            # Executa workflow uma vez
- *   node src/index.js --daily    # Executa e mantém cron (30min)
- *   node src/index.js --once     # Executa uma vez e sai
+ *   node src/index.js                      # Executa workflow uma vez
+ *   node src/index.js --daily                  # Executa e mantém cron (30min)
+ *   node src/index.js --once                   # Executa uma vez e sai
+ *   node src/index.js --limit=3                # Processa 3 artigos
+ *   node src/index.js --daysBack=14            # Artigos dos últimos 14 dias
+ *   node src/index.js --dry-run                # Lista artigos sem executar
  */
 
 import 'dotenv/config';
@@ -19,8 +22,29 @@ import { envBool } from './env.mjs';
 import cron from 'node-cron';
 
 const args = process.argv.slice(2);
-const isDaily = args.includes('--daily');
-const isOnce = args.includes('--once');
+
+/** Parse CLI flags no formato --key=value ou --flag */
+function parseArgs(argv) {
+  const parsed = { flags: [] };
+  for (const arg of argv) {
+    if (arg.startsWith('--')) {
+      const eq = arg.indexOf('=');
+      if (eq > 0) {
+        parsed[arg.slice(2, eq)] = arg.slice(eq + 1);
+      } else {
+        parsed.flags.push(arg.slice(2));
+      }
+    }
+  }
+  return parsed;
+}
+
+const cli = parseArgs(args);
+const isDaily = cli.flags.includes('daily');
+const isOnce = cli.flags.includes('once');
+const isDryRun = cli.flags.includes('dry-run') || cli.flags.includes('dryRun');
+const cliLimit = cli.limit ? parseInt(cli.limit, 10) : 5;
+const cliDaysBack = cli.daysBack ? parseInt(cli.daysBack, 10) : 7;
 
 /**
  * Executa o ciclo completo de produção:
@@ -38,14 +62,22 @@ async function runProductionCycle() {
   const startTime = Date.now();
 
   try {
+    const isMock = envBool(false, 'TVFACEBRASIL_HEYGEN_MOCK', 'HEYGEN_MOCK');
+
     // Passo 1: Buscar artigos
     console.log('\n[1/4] Buscando artigos...');
-    const articles = await fetchTopArticles({ limit: 5, daysBack: 7, minViews: 50 });
+    const articles = await fetchTopArticles({ limit: cliLimit, daysBack: cliDaysBack, minViews: 50 });
     console.log(`[1/4] ${articles.length} artigos encontrados`);
 
     if (articles.length === 0) {
-      console.log('[TV FaceBrasil] Nenhum artigo para processar. ⏭️');
+      console.log('[TV FaceBrasil] Nenhum artigo para processar. \u23ED\ufe0f');
       return { processed: 0, duration: 0, articles: [] };
+    }
+
+    if (isDryRun) {
+      console.log('[TV FaceBrasil] \uD83C\uDFC1 Dry run — apenas listando artigos. Nenhuma acao executada.');
+      articles.forEach((a, i) => console.log('  ' + (i + 1) + '. ' + a.id + ' — ' + a.title));
+      return { processed: articles.length, duration: 0, articles, dryRun: true };
     }
 
     resetRoundRobin();
