@@ -1,0 +1,84 @@
+{
+  "schema": "aiox-dev-harness/metrics-aggregated/v1",
+  "totalRuns": 5,
+  "totalSuccess": 3,
+  "totalFailures": 2,
+  "totalQaReturns": 0,
+  "totalDevmasterTriggered": 0,
+  "medianDurationMs": 12175,
+  "durations": [
+    3815,
+    10427,
+    12175,
+    12605,
+    18467
+  ],
+  "byModel": {
+    "glm": {
+      "runs": 1,
+      "success": 0,
+      "failures": 1,
+      "totalDurationMs": 10427
+    },
+    "opencode/deepseek-v4-flash-free": {
+      "runs": 4,
+      "success": 3,
+      "failures": 1,
+      "totalDurationMs": 47062
+    }
+  },
+  "byAdapter": {
+    "opencode": {
+      "runs": 5,
+      "success": 3,
+      "failures": 2
+    }
+  },
+  "runs": [
+    {
+      "issue": 10,
+      "success": false,
+      "durationMs": 10427,
+      "model": "glm",
+      "adapter": "opencode",
+      "qaReturns": 0,
+      "timestamp": "2026-06-06T18:26:42.170Z"
+    },
+    {
+      "issue": 10,
+      "success": false,
+      "durationMs": 3815,
+      "model": "opencode/deepseek-v4-flash-free",
+      "adapter": "opencode",
+      "qaReturns": 0,
+      "timestamp": "2026-06-06T20:12:47.528Z"
+    },
+    {
+      "issue": 10,
+      "success": true,
+      "durationMs": 12175,
+      "model": "opencode/deepseek-v4-flash-free",
+      "adapter": "opencode",
+      "qaReturns": 0,
+      "timestamp": "2026-06-06T20:14:01.647Z"
+    },
+    {
+      "issue": 11,
+      "success": true,
+      "durationMs": 18467,
+      "model": "opencode/deepseek-v4-flash-free",
+      "adapter": "opencode",
+      "qaReturns": 0,
+      "timestamp": "2026-06-06T20:15:32.719Z"
+    },
+    {
+      "issue": 12,
+      "success": true,
+      "durationMs": 12605,
+      "model": "opencode/deepseek-v4-flash-free",
+      "adapter": "opencode",
+      "qaReturns": 0,
+      "timestamp": "2026-06-06T20:27:12.219Z"
+    }
+  ]
+}

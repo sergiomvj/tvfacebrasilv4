@@ -1,0 +1,52 @@
+{
+  "schema": "aiox-dev-harness/contract/v1",
+  "issue": 11,
+  "title": "Story 4.3 - Polling de status do vídeo",
+  "repo": "sergiomvj/tvfacebrasilv4",
+  "branch": "main",
+  "allowedFiles": [
+    "src/heygen-client.mjs",
+    "src/index.js"
+  ],
+  "readonlyFiles": [
+    "src/env.mjs",
+    "src/llm-provider.mjs",
+    "src/script-generator.mjs",
+    "src/script-validator.mjs",
+    "src/persona-prompt.mjs",
+    "src/editorial-payload.mjs",
+    "src/video-provider-catalog.mjs",
+    "src/facebrasil-bridge.mjs"
+  ],
+  "criteria": [
+    "checkVideoStatus aceita opcoes: videoId, maxPollTime (default 120s), interval (default 5s)",
+    "Em modo mock, simula status: pending (2x), depois completed, ou failed se timeout",
+    "Implementa backoff exponencial nas consultas de status",
+    "Timeout configurável via parametro maxPollTime",
+    "Salva URL/metadata no banco quando completed",
+    "Marca falhas sem interromper o lote (index.js continua processando)",
+    "npm test passa sem erros"
+  ],
+  "scope": "Aprimorar checkVideoStatus com polling com backoff, timeout configurável, simulação de estados pendente/completo/falha/timeout em modo mock, e tratamento de falhas sem interromper batch.",
+  "model": "opencode/deepseek-v4-flash-free",
+  "fallbackModels": [
+    "opencode/mimo-v2.5-free",
+    "opencode/minimax-m3-free"
+  ],
+  "coder": "opencode",
+  "master": "codex",
+  "createdAt": "2026-06-06T20:15:00Z",
+  "forbiddenFiles": [
+    ".env*",
+    "*.pem",
+    "*.key",
+    "*secret*",
+    "*token*",
+    ".git/credentials",
+    "id_rsa*"
+  ],
+  "validationCommands": [],
+  "artifacts": [],
+  "qaReturns": 0,
+  "maxQaReturns": 3
+}

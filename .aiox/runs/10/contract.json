@@ -1,0 +1,51 @@
+{
+  "schema": "aiox-dev-harness/contract/v1",
+  "issue": 10,
+  "title": "Story 4.2 - Implementar round-robin de contas e avatares",
+  "repo": "sergiomvj/tvfacebrasilv4",
+  "branch": "main",
+  "allowedFiles": [
+    "src/heygen-client.mjs",
+    "src/index.js",
+    "src/facebrasil-bridge.mjs"
+  ],
+  "readonlyFiles": [
+    "src/env.mjs",
+    "src/llm-provider.mjs",
+    "src/script-generator.mjs",
+    "src/script-validator.mjs",
+    "src/persona-prompt.mjs",
+    "src/editorial-payload.mjs",
+    "src/video-provider-catalog.mjs"
+  ],
+  "criteria": [
+    "Alterna Conta-A/Avatar-1 e Conta-B/Avatar-2 no round-robin",
+    "getNextAccount aceita category opcional e prefere Conta-A para notícias 'duras' (imigracao, direitos, economia, politica, leis) e Conta-B para lifestyle (cultura, eventos, entretenimento, turismo)",
+    "Registra qual conta/avatar foi usado em cada artigo no metadado salvo por saveVideoMetadata",
+    "Implementa limite de concorrência configurável (TVFACEBRASIL_HEYGEN_CONCURRENCY, default 2) — não dispara mais que N requisições simultâneas",
+    "npm test passa sem erros",
+    "Estado do round-robin é persistido entre ciclos (arquivo .aiox/roundrobin-state.json ou similar simples)"
+  ],
+  "scope": "Aprimorar o módulo heygen-client.mjs com round-robin completo de contas e avatares: alternância, preferência por categoria, registro de uso por artigo, e controle de concorrência configurável. Estado simples sem scheduler complexo.",
+  "model": "opencode/deepseek-v4-flash-free",
+  "coder": "opencode",
+  "master": "codex",
+  "createdAt": "2026-06-06T18:25:00Z",
+  "fallbackModels": [
+    "opencode/mimo-v2.5-free",
+    "opencode/minimax-m3-free"
+  ],
+  "forbiddenFiles": [
+    ".env*",
+    "*.pem",
+    "*.key",
+    "*secret*",
+    "*token*",
+    ".git/credentials",
+    "id_rsa*"
+  ],
+  "validationCommands": [],
+  "artifacts": [],
+  "qaReturns": 0,
+  "maxQaReturns": 3
+}

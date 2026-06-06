@@ -151,7 +151,7 @@ async function runProductionCycle() {
     console.log('\n[3/4] Verificando status dos videos...');
     const completedVideos = [];
     const checkTasks = results
-      .filter(r => r.video.success)
+      .filter(r => r && r.video && r.video.success)
       .map(r => () => checkVideoStatus(r.video.videoId, {
         maxPollTime: 30_000,
         interval: 1_000

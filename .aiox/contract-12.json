@@ -1,0 +1,34 @@
+{
+  "schema": "aiox-dev-harness/contract/v1",
+  "issue": 12,
+  "title": "Story 4.4 - Modo single-account HeyGen",
+  "repo": "sergiomvj/tvfacebrasilv4",
+  "branch": "main",
+  "allowedFiles": [
+    "src/heygen-client.mjs"
+  ],
+  "readonlyFiles": [
+    "src/env.mjs",
+    "src/llm-provider.mjs",
+    "src/script-generator.mjs",
+    "src/script-validator.mjs",
+    "src/persona-prompt.mjs",
+    "src/editorial-payload.mjs",
+    "src/video-provider-catalog.mjs",
+    "src/facebrasil-bridge.mjs",
+    "src/index.js"
+  ],
+  "criteria": [
+    "Se apenas TVFACEBRASIL_HEYGEN_A_API_KEY estiver configurada, buildAccountPool retorna somente Conta-A",
+    "Conta-B so entra no pool quando TVFACEBRASIL_HEYGEN_B_API_KEY existir e nao estiver vazia",
+    "Logs indicam single-account ou multi-account, sem imprimir chaves",
+    "Round-robin nao seleciona contas sem API key",
+    "npm test passa sem erros"
+  ],
+  "scope": "Refatorar buildAccountPool() em heygen-client.mjs para criar contas dinamicamente baseado em env vars, em vez de lista fixa. Conta-A é sempre default. Conta-B só entra se a env existir.",
+  "model": "opencode/deepseek-v4-flash-free",
+  "fallbackModels": ["opencode/mimo-v2.5-free", "opencode/minimax-m3-free"],
+  "coder": "opencode",
+  "master": "codex",
+  "createdAt": "2026-06-06T20:25:00Z"
+}
