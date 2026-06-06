@@ -1,113 +1,60 @@
-# TV FaceBrasil — Persona Bible Template
+# Persona Bible — TV FaceBrasil
 
-Use this file as the fixed visual identity block for AI video prompts.
-Keep one Persona Bible per recurring presenter.
+> **Persona ID:** `tvfacebrasil-presenter-v1`
+> **Versão do template:** 1.0
 
-## Metadata
+## Aparência Física
+- Gênero: Masculino
+- Idade aparente: 35-40 anos
+- Rosto: Marcante, mandíbula definida, tom de pele moreno claro
+- Olhos: Castanhos, expressão séria mas acolhedora
+- Cabelo: Escuro, penteado para trás, barba curta e bem cuidada (2-3mm)
+- Altura: 1,78m, porte atlético sem exageros
 
-- Persona ID: `facebrasil-presenter-01`
-- Version: `0.1`
-- Owner: `TV FaceBrasil`
-- Use case: `vertical news shorts, 9:16`
-- Status: `draft`
+## Vestuário
+- Camisa social ou polo de cor sólida (azul marinho, vinho, cinza chumbo)
+- Blazer casual em tons neutros quando em cenário de estúdio
+- Evitar: riscas, padronagens muito carregadas, branco puro (estoura na câmera)
+- Acessórios: relógio discreto, sem brilhos
 
-## Persona Base
+## Estilo de Apresentação
+- Tom: Sério mas acessível, como um amigo que explica algo importante
+- Postura: Erguida, mãos visíveis (gesticulação moderada)
+- Contato visual: Direto com a câmera, pausas naturais
+- Velocidade de fala: Moderada (150-170 palavras/minuto), pausas para ênfase
+- Variação emocional: Neutro-positivo para notícias gerais; preocupado para temas graves; otimista para conquistas da comunidade
 
-```text
-A Brazilian news presenter in her early 30s, medium tan skin, oval face,
-dark brown almond-shaped eyes, symmetrical facial features, natural eyebrows,
-long straight dark brown hair parted slightly to the left, shoulder-length to
-mid-chest, natural professional makeup, warm but composed expression.
+## Cenário
+- Opção 1 (estúdio): Fundo sutil com textura geométrica em azul escuro (#003366) com logotipo FBR.NEWS no canto superior direito
+- Opção 2 (newsroom): Ambiente de redação desfocado ao fundo com luz quente lateral
+- Iluminação: Três pontos, key light no rosto (leve ângulo 45°), fill light suave, back light para separar do fundo
 
-She wears a navy blue blazer over a crisp white blouse, small discreet silver
-earrings, no necklace, no distracting accessories. She stands upright with a
-calm, professional posture, facing the camera directly like a modern digital
-news anchor.
+## Regras de Consistência
+- Mesma persona para TODOS os vídeos do canal
+- Aparência, roupa e cenário NÃO mudam entre vídeos
+- Apenas o conteúdo do roteiro varia conforme o artigo
+- Persona ID e versão devem ser registrados no metadado de cada vídeo
+
+## Regras Negativas
+- NUNCA: persona sorrindo em notícias trágicas
+- NUNCA: persona com expressão exagerada ou teatral
+- NUNCA: mudar de roupa no meio do vídeo (transições)
+- NUNCA: persona olhando para baixo ou para os lados
+- NUNCA: gestos muito rápidos ou agitados
+
+## Bloco Visual (Inglês — para modelos de vídeo)
+```
+[Visual Description]
+Camera: Medium shot, eye-level angle, shallow depth of field
+Subject: Male presenter, 35-40 years, defined jaw, light brown skin, dark hair swept back, short well-trimmed beard
+Attire: Dark navy polo shirt, no tie, minimal accessories
+Background: Dark blue (#003366) with subtle geometric texture, FBR.NEWS logo top-right
+Lighting: Three-point, warm key light at 45°, soft fill
+Expression: Serious yet welcoming, maintains eye contact
+Gestures: Moderate hand movements, open palms
+Duration: Continuous single shot, no scene transitions
 ```
 
-## Wardrobe Lock
+---
 
-```text
-Always keep the same outfit style: navy blue blazer, white blouse, discreet
-silver earrings. Keep the clothing clean, professional, modern, and consistent.
-Do not change to casual clothes, dresses, hats, uniforms, bright colors, heavy
-jewelry, or branded apparel.
-```
-
-## Face And Body Consistency
-
-```text
-Keep the same age, ethnicity, face shape, facial proportions, skin tone, eye
-color, hair color, hair length, hairstyle, body type, and presenter identity
-across every generation.
-```
-
-## Presentation Style
-
-```text
-Calm Brazilian Portuguese news delivery, clear articulation, warm but serious
-journalistic tone, subtle hand gestures, natural blinking, restrained facial
-expressions, no exaggerated emotion, no comedy performance.
-```
-
-## Scene Base
-
-```text
-Modern clean newsroom background, soft studio lighting, shallow depth of field,
-neutral blue and white visual palette, vertical 9:16 composition, presenter in
-medium shot from waist or chest up, camera at eye level, stable camera, no shaky
-movement.
-```
-
-## Negative Consistency Rules
-
-```text
-Do not change the presenter into another person. Do not alter ethnicity, age,
-face structure, eye color, hair color, hair length, hairstyle, outfit style, or
-body type. Do not add glasses unless explicitly requested. Do not add hats,
-scarves, heavy jewelry, logos, microphones, extra people, cartoon style,
-anime style, fantasy style, distorted face, inconsistent hands, extra fingers,
-text artifacts, watermarks, or low-quality newsroom backgrounds.
-```
-
-## Prompt Composer Template
-
-```text
-PERSONA_BASE:
-{persona_base}
-
-WARDROBE_LOCK:
-{wardrobe_lock}
-
-FACE_AND_BODY_CONSISTENCY:
-{face_and_body_consistency}
-
-PRESENTATION_STYLE:
-{presentation_style}
-
-SCENE_BASE:
-{scene_base}
-
-VIDEO_TASK:
-The presenter explains the following FaceBrasil article topic in Brazilian
-Portuguese with a calm journalistic delivery:
-"{article_topic}"
-
-The video is a vertical 9:16 news short. The presenter should speak naturally,
-use subtle hand gestures, maintain eye contact with the camera, and keep the
-same identity described above throughout the entire clip.
-
-NEGATIVE_RULES:
-{negative_consistency_rules}
-```
-
-## Validation Checklist
-
-- [ ] Same face across generations
-- [ ] Same hairstyle and hair color
-- [ ] Same clothing palette and outfit
-- [ ] Same apparent age and ethnicity
-- [ ] No extra people
-- [ ] No logo/text artifacts
-- [ ] Usable 9:16 framing
-- [ ] Professional news tone
+*Template versionado. Alterações exigem atualização do Persona ID.*
