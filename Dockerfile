@@ -15,6 +15,12 @@ COPY src/ ./src/
 COPY squads/ ./squads/
 COPY scripts/ ./scripts/
 
+# Diretório de estado com permissão para node user
+RUN mkdir -p /app/.aiox && chown node:node /app/.aiox
+
+# Volume para persistência de estado
+VOLUME /app/.aiox
+
 # Usuário não-root
 USER node
 
